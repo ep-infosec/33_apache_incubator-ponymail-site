@@ -1,0 +1,143 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Apache Pony Mail (Incubating)</title>
+<link rel="stylesheet" type="text/css" href="/css/default.css"/>
+<link rel="stylesheet" type="text/css" href="/css/fa/fa.css"/>
+<link rel="apple-touch-icon" sizes="57x57" href="/icons/apple-icon-57x57.png">
+<link rel="apple-touch-icon" sizes="60x60" href="/icons/apple-icon-60x60.png">
+<link rel="apple-touch-icon" sizes="72x72" href="/icons/apple-icon-72x72.png">
+<link rel="apple-touch-icon" sizes="76x76" href="/icons/apple-icon-76x76.png">
+<link rel="apple-touch-icon" sizes="114x114" href="/icons/apple-icon-114x114.png">
+<link rel="apple-touch-icon" sizes="120x120" href="/icons/apple-icon-120x120.png">
+<link rel="apple-touch-icon" sizes="144x144" href="/icons/apple-icon-144x144.png">
+<link rel="apple-touch-icon" sizes="152x152" href="/icons/apple-icon-152x152.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-icon-180x180.png">
+<link rel="icon" type="image/png" sizes="192x192"  href="/android-icon-192x192.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="96x96" href="/icons/favicon-96x96.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16x16.png">
+<link rel="manifest" href="/icons/manifest.json">
+<meta name="msapplication-TileColor" content="#ffffff">
+<meta name="msapplication-TileImage" content="/icons/ms-icon-144x144.png">
+<meta name="theme-color" content="#ffffff">
+</head><body>
+<div id="titlebar">
+    <a href="/contribute.html"><img align='left' style="width: 130px; height: 125px; position: relative; left: -6px; top: -6px; border: 0;" src="/images/devme.png" alt="Fork/Hack on Pony Mail"></a>
+    <a href='/'><img src="/images/ponymail.svg" style="width: 110px; margin-left: -10px; margin-right: 20px; height: auto;" align="left"/></a>
+    <h1><a id="title" href="/" style="color: #FFF !important;">Apache Pony Mail&trade; (Incubating)</a></h1>
+    <div id="menubar">
+        <ul>
+            <li><a href="/docs.html"><i class="fa fa-book"></i><span>Documentation</span></a></li>
+            <li><a href="/source.html"><i class="fa fa-git-square"></i><span>Source</span></a></li>
+            <li><a href="/downloads.html"><i class="fa fa-cloud-download"></i><span>Download</span></a></li>
+            <li><a href="/support.html"><i class="fa fa-question-circle"></i><span>Get support</span></a></li>
+            <li><a href="/contribute.html"><i class="fa fa-share-alt"></i><span>Contribute</span></a></li>
+            <li><a href="/about.html"><i class="fa fa-users"></i><span>About</span></a></li>
+        </ul>
+    </div>
+</div>
+<h1 id='contributingtoponymail'>Contributing to Pony Mail<a href='#contributingtoponymail' style='color: rgba(0,0,0,0);'>&para;</a></h1>
+<p>We'd LOVE if more people would contribute to Pony Mail!
+Any form of contribution is most welcome, whether it be programming,
+documentation, evangelism, marketing, or helping out other users.</p>
+<h2 id='sourcecodeandissuetracker'>Source code and issue tracker<a href='#sourcecodeandissuetracker' style='color: rgba(0,0,0,0);'>&para;</a></h2>
+<p>Our source repository is at: <a href="https://github.com/apache/incubator-ponymail">https://github.com/apache/incubator-ponymail</a></p>
+<p>We currently use GitHub Issues for tracking bugs and improvements: <a href="https://github.com/apache/incubator-ponymail/issues">https://github.com/apache/incubator-ponymail/issues</a></p>
+<h2 id='contributingguideline'>Contributing guideline<a href='#contributingguideline' style='color: rgba(0,0,0,0);'>&para;</a></h2>
+<p>To contribute to Pony Mail, follow these steps:</p>
+<ul>
+<li><a href="/source.html">Fork the repo</a></li>
+<li>Subscribe to the Pony Mail dev list:<ul>
+<li>Either send an email to dev-subscribe@ponymail.incubator.apache.org OR</li>
+<li>Visit <a href="https://lists.apache.org/list.html?dev@ponymail.apache.org">https://lists.apache.org/list.html?dev@ponymail.apache.org</a> (You can use Google+ or ASF OAuth)</li>
+</ul>
+</li>
+<li>Find something to fix or help out with.</li>
+<li>Let us know what you want to do by opening an <a href="https://github.com/apache/incubator-ponymail/issues">issue</a> or a pull request.</li>
+<li>Join us on #ponymail on the Freenode IRC network.</li>
+</ul>
+<h2 id='gitworkflow'>Git Workflow<a href='#gitworkflow' style='color: rgba(0,0,0,0);'>&para;</a></h2>
+<p>The following workflow is adapted from the <a href="https://cwiki.apache.org/confluence/display/JCLOUDS/Git+workflow">jClouds workflow</a>:</p>
+<h4 id='prepareyourfork'>Prepare your fork<a href='#prepareyourfork' style='color: rgba(0,0,0,0);'>&para;</a></h4>
+<p>The first thing to do is to make sure you have the ponymail Git
+repository configured as a remote. In this case we will add it as a
+remote called "ponymail":
+<pre>
+cd ponymail
+git remote add ponymail https://github.com/apache/incubator-ponymail.git
+</pre></p>
+<h4 id='createthefeaturebranch'>Create the feature branch<a href='#createthefeaturebranch' style='color: rgba(0,0,0,0);'>&para;</a></h4>
+<p>When beginning working on the feature, take a branch from the latest master version:
+<pre>
+git checkout master
+git fetch ponymail
+git reset --hard ponymail/master
+git checkout -b feature-branch
+</pre></p>
+<p>As we want a clean master and we should never use directly use the
+master branch (it should be only used to sync the fork with the upstream
+repo), so we can just reset hard it instead of rebasing. Develop the
+feature and address the review comments</p>
+<p>Develop the feature normally, commit the changes (you can create N
+commits if needed), and open the pull request.</p>
+<p>Once the pull request is open and has been reviewed, address any review
+comments and add the changes in new commits. This will make it easier
+for the reviewer to focus only in the last changes without having to go
+again through the entire pull request. Once the PR is ready to be
+merged, you'll be asked to squash the commits. Preparing the pull
+request to be merged</p>
+<p>First squash the commits, to have a cleaner rebase (it is easier to rebase having one single commit than having N commits):</p>
+<pre>
+git rebase -i HEAD~N     # Where N is the number of commits in the pull request
+</pre>
+
+<p>Now that there is only one commit, update the branch to the latest version of master:
+<pre>
+git fetch ponymail
+git rebase ponymail/master
+</pre></p>
+<p>At this point the local branch with one single commit on top of the latest master and it can be pushed to your fork:
+<pre>
+git push &lt;your-fork's-remote&gt; feature-branch -f # You might need to push with --force
+                                                # because of the rebase to the latest master
+</pre></p>
+<p>Now the pull request will be clean with one single commit and up to date
+with the latest master. Ready to be merged!</p>
+<h4 id='anoteaboutkeepingthepullrequestuptodate'>A note about keeping the pull request up to date<a href='#anoteaboutkeepingthepullrequestuptodate' style='color: rgba(0,0,0,0);'>&para;</a></h4>
+<p>The key point is to <em>avoid</em> updating your feature branch with master
+until the PR is ready to be merged (or until you're asked to rebase).
+This way you'll avoid accidental merge commits and fixing conflicts when
+you shouldn't be dealing with that. If for you want to keep your branch
+up to date with the latest master changes anyway, always rebase it;
+don't git pull or introduce merge commits, as it will complicate the
+rebasing process and will make it difficult to merge the pull request in
+a clean way</p>
+<h3 id='buildingreleases'>Building releases<a href='#buildingreleases' style='color: rgba(0,0,0,0);'>&para;</a></h3>
+<p>Please see <a href="building.html">this document</a> for details on building a release.</p>
+<div style="display: inline-block; background: #BBB; margin: -10px; padding: 10px;">
+    <h4><a id="disclaimer"></a>Disclaimer</h4>
+<div style="width: 65%; float: left;">
+<p style="line-height: 12pt;">
+    Apache Pony Mail (Incubating) is an effort undergoing incubation at
+    The Apache Software Foundation (ASF), sponsored by the <a href="https://incubator.apache.org">
+    Apache Incubator</a>. Incubation is required of all newly accepted projects
+    until a further review indicates that the infrastructure,
+    communications, and decision making process have stabilized in a
+    manner consistent with other successful ASF projects. While
+    incubation status is not necessarily a reflection of the
+    completeness or stability of the code, it does indicate that the
+    project has yet to be fully endorsed by the ASF.
+</p>
+</div>
+<div style="width: 20%; float: left; padding-top: 16px; margin-left: -8px;">
+<a href="https://incubator.apache.org"><img src="https://incubator.apache.org/images/incubator_feather_egg_logo_sm.png"/></a>
+</div>
+<div style="width: 15%; float: left; line-height: 15px; padding-left: 22px;">
+    <a class="item" target="_blank" href="https://incubator.apache.org/">Apache Incubator</a><br/>
+            <a class="item" target="_blank" href="https://www.apache.org/">About the ASF<span></span></a><br/>
+            <a class="item" target="_blank" href="https://www.apache.org/foundation/policies/conduct.html">Code of Conduct<span></span></a><br/>
+            <a class="item" target="_blank" href="https://www.apache.org/foundation/thanks.html">Thanks<span></span></a><br/>
+            <a class="item" target="_blank" href="https://www.apache.org/foundation/sponsorship.html">Become a Sponsor<span></span></a><br/>
+            <a class="item" target="_blank" href="https://www.apache.org/security/">Security<span></span></a><br/>
+            <a class="item" target="_blank" href="https://www.apache.org/licenses/LICENSE-2.0">License<span></span></a><br/>
+</div>
+</div>
+</body></html>

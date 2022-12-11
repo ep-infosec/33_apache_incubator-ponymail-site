@@ -1,0 +1,245 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Apache Pony Mail (Incubating)</title>
+<link rel="stylesheet" type="text/css" href="/css/default.css"/>
+<link rel="stylesheet" type="text/css" href="/css/fa/fa.css"/>
+<link rel="apple-touch-icon" sizes="57x57" href="/icons/apple-icon-57x57.png">
+<link rel="apple-touch-icon" sizes="60x60" href="/icons/apple-icon-60x60.png">
+<link rel="apple-touch-icon" sizes="72x72" href="/icons/apple-icon-72x72.png">
+<link rel="apple-touch-icon" sizes="76x76" href="/icons/apple-icon-76x76.png">
+<link rel="apple-touch-icon" sizes="114x114" href="/icons/apple-icon-114x114.png">
+<link rel="apple-touch-icon" sizes="120x120" href="/icons/apple-icon-120x120.png">
+<link rel="apple-touch-icon" sizes="144x144" href="/icons/apple-icon-144x144.png">
+<link rel="apple-touch-icon" sizes="152x152" href="/icons/apple-icon-152x152.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-icon-180x180.png">
+<link rel="icon" type="image/png" sizes="192x192"  href="/android-icon-192x192.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="96x96" href="/icons/favicon-96x96.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16x16.png">
+<link rel="manifest" href="/icons/manifest.json">
+<meta name="msapplication-TileColor" content="#ffffff">
+<meta name="msapplication-TileImage" content="/icons/ms-icon-144x144.png">
+<meta name="theme-color" content="#ffffff">
+</head><body>
+<div id="titlebar">
+    <a href="/contribute.html"><img align='left' style="width: 130px; height: 125px; position: relative; left: -6px; top: -6px; border: 0;" src="/images/devme.png" alt="Fork/Hack on Pony Mail"></a>
+    <a href='/'><img src="/images/ponymail.svg" style="width: 110px; margin-left: -10px; margin-right: 20px; height: auto;" align="left"/></a>
+    <h1><a id="title" href="/" style="color: #FFF !important;">Apache Pony Mail&trade; (Incubating)</a></h1>
+    <div id="menubar">
+        <ul>
+            <li><a href="/docs.html"><i class="fa fa-book"></i><span>Documentation</span></a></li>
+            <li><a href="/source.html"><i class="fa fa-git-square"></i><span>Source</span></a></li>
+            <li><a href="/downloads.html"><i class="fa fa-cloud-download"></i><span>Download</span></a></li>
+            <li><a href="/support.html"><i class="fa fa-question-circle"></i><span>Get support</span></a></li>
+            <li><a href="/contribute.html"><i class="fa fa-share-alt"></i><span>Contribute</span></a></li>
+            <li><a href="/about.html"><i class="fa fa-users"></i><span>About</span></a></li>
+        </ul>
+    </div>
+</div>
+<h1 id='installingponymail'>Installing Pony Mail<a href='#installingponymail' style='color: rgba(0,0,0,0);'>&para;</a></h1>
+<p>If your distro is on this list, please refer to that specific document
+for detailed package installation instructions:</p>
+<ul>
+<li><a href="install.debian.html">Debian (Jessie) Installation Instructions</a></li>
+<li><a href="install.ubuntu.html">Ubuntu (14.04) Installation Instructions</a></li>
+<li><a href="install.centos.html">CentOS (7.1) Installation Instructions</a></li>
+<li><a href="install.fedora.html">Fedora (22) Installation Instructions</a></li>
+</ul>
+<p>Otherwise, read the next two chapters:</p>
+<h2 id='prerequisites'>Pre-requisites<a href='#prerequisites' style='color: rgba(0,0,0,0);'>&para;</a></h2>
+<p>You will need the following software installed on your machine:</p>
+<ul>
+<li>ElasticSearch &gt;= 2.1 and &lt; 6.0 (setup.py does not support 6.x+; the code may perhaps run on 6.x)</li>
+<li>Python 3.x for the archiver plugin (setup.py will handle dependencies) and importer</li>
+<li>Python <code>html2text</code> package (GPLv3) if you wish to archive HTML-only mails (remember to add the <code>--html2text</code> command line arg)</li>
+<li>Apache HTTP Server 2.4.x with mod_lua (see http://modlua.org/gs/installing if you need to build mod_lua manually)</li>
+<li>Lua &gt;=5.1 with the following modules: cjson, luasec, luasocket
+  (Note: Lua 5.3 is not currently supported by httpd mod_lua or luasocket)</li>
+</ul>
+<h2 id='downloadandinstall'>Download and Install<a href='#downloadandinstall' style='color: rgba(0,0,0,0);'>&para;</a></h2>
+<ul>
+<li>Download the git repo: <code>git clone https://github.com/apache/incubator-ponymail.git</code></li>
+<li>Start ElasticSearch on the machine it needs to run on.</li>
+<li>Run setup.py in the <code>tools</code> dir:
+<code>$cd tools
+      $python3 setup.py
+      ...[follow instructions in the setup script]</code></li>
+<li>Edit <code>site/js/config.js</code> to suit your needs (usually very little editing is needed)</li>
+<li>Set up the appropriate authorisation for private lists. For examples, see:
+  https://github.com/apache/incubator-ponymail/tree/master/aaa_examples</li>
+</ul>
+<h3 id='usingauthforelasticsearch'>Using auth for ElasticSearch<a href='#usingauthforelasticsearch' style='color: rgba(0,0,0,0);'>&para;</a></h3>
+<p>If your ElasticSearch instance requires authentication for the importer/archiver, please
+add the following lines in the <code>elasticsearch</code> block of <code>ponymail.cfg</code> once generated:</p>
+<pre>
+user:           [username for ES]
+password:       [password for ES]
+</pre>
+
+<h3 id='usingapachehttpserver'>Using Apache HTTP Server:<a href='#usingapachehttpserver' style='color: rgba(0,0,0,0);'>&para;</a></h3>
+<ul>
+<li>Set up a VirtualHost block in Apache httpd that points to the <code>site/</code> directory in Pony Mail</li>
+<li>Add the configuration snippets from <code>configs/ponymail_httpd.conf</code> to the virtual host</li>
+<li>Start Apache httpd to enable the user-facing interface</li>
+</ul>
+<h3 id='usingnginx'>Using nginx:<a href='#usingnginx' style='color: rgba(0,0,0,0);'>&para;</a></h3>
+<ul>
+<li>To use nginx, you will also need to install the <code>lua-apr</code> module from your distro.</li>
+<li>Set up a Server block in nginx that points to the <code>site/</code> directory in Pony Mail</li>
+<li>Add the configuration snippets from <code>configs/ponymail_nginx.conf</code> to the server config</li>
+<li>Start nginx to enable the user-facing interface</li>
+</ul>
+<h2 id='settingupthearchiver'>Setting up the archiver<a href='#settingupthearchiver' style='color: rgba(0,0,0,0);'>&para;</a></h2>
+<p>First off, you will need both <code>tools/archiver.py</code> and the generated
+<code>tools/ponymail.cfg</code> present on the machine that your mail server runs on. This
+machine should also have access to the ElasticSearch backend.</p>
+<p>If your mailing list supports feeding emails to a program, feed the incoming new
+emails to <code>python3 /path/to/tools/archiver.py</code> and it will use STDIN as the
+transport mechanism. If you are simply using aliases or dot-forwards and no ML
+system, you can add (for example) <code>"|/usr/bin/python3
+/path/to/tools/archiver.py"</code> to your alias file to enable archiving. If you are
+not using a Mailing List manager, you will need to tell Pony Mail which email
+header determines the list ID using the --altheader argument, for instance:
+<code>foolist: "|/usr/bin/python3 /path/to/tools/archiver.py --altheader delivered-to"
+    foolist-private: "|/usr/bin/python3 /path/to/tools/archiver.py --altheader delivered-to --private"</code></p>
+<p>If you are using MailMan 3, you can add archiver.py as an archive by following the instructions inside the python script:
+- Copy the archiver.py file to <code>$mailman_plugin_dir/mailman_ponymail/__init__.py</code>
+- Copy ponymail.cfg to the same dir (for ES configuration)
+- Enable the module by adding the following to your <code>mailman.cfg</code> file::
+<code>[archiver.ponymail]
+  # Pony Mail
+  class: mailman_ponymail.Archiver
+  enable: yes</code></p>
+<p>For older mailing list systems such as Mailman 2 and ezmlm, you can also
+take a look at our <a href="archiving.html">archiving examples</a> page for pointers.</p>
+<h2 id='publicversusprivatelists'>Public versus private lists<a href='#publicversusprivatelists' style='color: rgba(0,0,0,0);'>&para;</a></h2>
+<p>In MailMan 3, this should be auto-detected and is not a concern.
+When using other ML systems via piping to STDIN, you should add
+the --private arg to the python script to mark an email as private:
+<code>foolist-private: "|/usr/bin/python3 /path/to/tools/archiver.py --private"
+    foolist-public: "|/usr/bin/python3 /path/to/tools/archiver.py"</code>
+Note that private lists are subject to authorisation which you should set up as noted above</p>
+<h2 id='importingolddataintoponymail'>Importing old data into Pony Mail<a href='#importingolddataintoponymail' style='color: rgba(0,0,0,0);'>&para;</a></h2>
+<p>See <a href="importing.html">this guide</a> for details on how to import old archives into Pony Mail.</p>
+<h2 id='bulkeditinglists'>Bulk editing lists<a href='#bulkeditinglists' style='color: rgba(0,0,0,0);'>&para;</a></h2>
+<p>You can use <code>edit-list.py</code> to perform bulk operations:
+- Rename lists
+- Mark entire lists are private or public</p>
+<p>Run <code>python3 edit-list.py --help</code> for CLI args.</p>
+<h2 id='settingupoauthforponymail'>Setting up OAuth for Pony Mail<a href='#settingupoauthforponymail' style='color: rgba(0,0,0,0);'>&para;</a></h2>
+<p>If you want people to be able to log in and reply via the Web UI, you
+can specify an OAuth provider.</p>
+<h3 id='settingupanoauthprovider'>Setting up an OAuth provider<a href='#settingupanoauthprovider' style='color: rgba(0,0,0,0);'>&para;</a></h3>
+<p>Pony Mail comes with a few default OAuth examples in <code>site/js/config.js</code>, such
+as ASF Oauth and Google OAuth. You can enable these by uncommenting the lines in
+question, or set up your own OAuth portal to handle things. This is a standard
+OAuth that expects the backend to supply the following JSON data on success:</p>
+<pre>
+    {
+        "fullname": "The full name of the authed user",
+        "email": "The user's email address",
+        "uid": "(optional) The unique user ID of the logged in user (for instance, LDAP UID)",
+        "isMember": true/false (optional, specifies whether the person is a privileged user with access to all lists)
+    }
+</pre>
+
+<p>For private list browsing, Pony Mail supplies an example AAA library in
+<code>site/api/lib/aaa.lua</code> that does LDAP lookups to determine which groups a person
+belongs to, and thus which lists said person has access to. The AAA example is
+modelled on the Apache LDAP structure, so you may wish to change this to suit
+your need. We have <a href="../aaa_examples/">several simple AAA examples</a> in the
+<code>aaa_examples</code> directory.</p>
+<p>If you are looking for an OAuth portal to provide users access to private lists
+in the archive, you will need to add the OAuth domain to config.admin_oauth in
+config.lua:</p>
+<pre>
+    admin_oauth = { 'myoauth.foo.tld', '*.oauthprovider.com', 'etc' }
+</pre>
+
+<p>If not specified in config.lua, OAuth will only provide users with a place to
+store settings and notifications, and - provided your mail server is set to accept
+this - a place to reply to emails in the archive.</p>
+<h4 id='usinggithuboauthandotherclientsecretproviders'>Using GitHub OAuth and other client-secret providers<a href='#usinggithuboauthandotherclientsecretproviders' style='color: rgba(0,0,0,0);'>&para;</a></h4>
+<p>If your OAuth provider requires a client secret, you can specify this in <code>site/api/lib/config.lua</code>, as this GitHub example shows:</p>
+<pre>
+    oauth_fields = {
+        github = {
+            client_secret = "abcdef1",
+            client_id = "abcdef2",
+            oauth_token = "https://github.com/login/oauth/access_token"
+        }
+    }
+</pre>
+
+<p>This essentially overrides <code>config.js</code> but without showing the data to anyone outside the server.</p>
+<h3 id='whitelistingrepliesviathewebui'>Whitelisting replies via the Web UI<a href='#whitelistingrepliesviathewebui' style='color: rgba(0,0,0,0);'>&para;</a></h3>
+<p>To have Pony Mail accept replies done via the Web UI, you must make sure
+that <code>site/api/lib/config.lua</code> contains the appropriate string (or array of strings) matching the domain(s) you wish to allow new email for. To allow replies to everything, set this to <code>*</code>(NOT RECOMMENDED).
+You can also allow based on GLOBs or an array of accepted domains and sub-domains:</p>
+<pre>
+    accepted_domains = "*" -- This would allow posts to any email address, baaaad choice.
+    accepted_domains = "foo.org" -- Allow only to *@foo.org
+    accepted_domains = "*.foo.org" -- Allow only posts to *@*.foo.org, but not *@foo.org
+    accepted_domains = { "foo.org", "*.foo.org" } -- Allow posts both to *.foo.org and foo.org
+</pre>
+
+<h3 id='settingemailfooters'>Setting email footers<a href='#settingemailfooters' style='color: rgba(0,0,0,0);'>&para;</a></h3>
+<p>It is possible to set email footers in each email sent via the Web UI.
+This is done by configuring the <code>email_footer</code> variable in  <code>site/api/lib/config.lua</code>.
+You may use the following variables in the footer:</p>
+<pre>
+    $list: The mailing list being sent to (foo@bar.tld)
+    $hostname: The hostname of the server
+    $port: The port of the server (80, 443 etc)
+    $msgid: The message ID of the email (for permalinks etc)
+</pre>
+
+<p>An example footer could be:</p>
+<pre>
+    --------
+    Sent via Pony Mail for $list.
+    To view this list online, visit: https://my.tld/list.html?$list
+    To view this email (and subsequent replies), visit:
+    https://my.tld/thread.html/$msgid
+    --------
+</pre>
+
+<h3 id='anoteonemailheaders'>A note on email headers<a href='#anoteonemailheaders' style='color: rgba(0,0,0,0);'>&para;</a></h3>
+<p>By default, headers such as to/cc are not shown in the normal email view.
+To enable these headers, set <code>full_headers</code> to <code>true</code> in the <code>site/api/lib/config.lua</code> file.</p>
+<h3 id='lastlyanoteaboutmessageidmidgenerators'>Lastly, a note about Message-ID (MID) generators<a href='#lastlyanoteaboutmessageidmidgenerators' style='color: rgba(0,0,0,0);'>&para;</a></h3>
+<p>The default MID generator is called 'medium' and digests the message
+body, timestamp and list-ID to generate the MID. There is also a 'short'
+that only digests the body, and a 'full' that uses the entire message as
+a bytestring to generate an ID. Medium is recommended for most setups
+(especially clustered setups), while full can be used for single-machine
+setups.
+N.B. At present, all the generators have issues, see (#176 #177 #178)
+Please see <a href="archiving.html#usingtherightidgenerator">this paragraph</a> about document ID generators.</p>
+<div style="display: inline-block; background: #BBB; margin: -10px; padding: 10px;">
+    <h4><a id="disclaimer"></a>Disclaimer</h4>
+<div style="width: 65%; float: left;">
+<p style="line-height: 12pt;">
+    Apache Pony Mail (Incubating) is an effort undergoing incubation at
+    The Apache Software Foundation (ASF), sponsored by the <a href="https://incubator.apache.org">
+    Apache Incubator</a>. Incubation is required of all newly accepted projects
+    until a further review indicates that the infrastructure,
+    communications, and decision making process have stabilized in a
+    manner consistent with other successful ASF projects. While
+    incubation status is not necessarily a reflection of the
+    completeness or stability of the code, it does indicate that the
+    project has yet to be fully endorsed by the ASF.
+</p>
+</div>
+<div style="width: 20%; float: left; padding-top: 16px; margin-left: -8px;">
+<a href="https://incubator.apache.org"><img src="https://incubator.apache.org/images/incubator_feather_egg_logo_sm.png"/></a>
+</div>
+<div style="width: 15%; float: left; line-height: 15px; padding-left: 22px;">
+    <a class="item" target="_blank" href="https://incubator.apache.org/">Apache Incubator</a><br/>
+            <a class="item" target="_blank" href="https://www.apache.org/">About the ASF<span></span></a><br/>
+            <a class="item" target="_blank" href="https://www.apache.org/foundation/policies/conduct.html">Code of Conduct<span></span></a><br/>
+            <a class="item" target="_blank" href="https://www.apache.org/foundation/thanks.html">Thanks<span></span></a><br/>
+            <a class="item" target="_blank" href="https://www.apache.org/foundation/sponsorship.html">Become a Sponsor<span></span></a><br/>
+            <a class="item" target="_blank" href="https://www.apache.org/security/">Security<span></span></a><br/>
+            <a class="item" target="_blank" href="https://www.apache.org/licenses/LICENSE-2.0">License<span></span></a><br/>
+</div>
+</div>
+</body></html>

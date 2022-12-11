@@ -1,0 +1,287 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Apache Pony Mail (Incubating)</title>
+<link rel="stylesheet" type="text/css" href="/css/default.css"/>
+<link rel="stylesheet" type="text/css" href="/css/fa/fa.css"/>
+<link rel="apple-touch-icon" sizes="57x57" href="/icons/apple-icon-57x57.png">
+<link rel="apple-touch-icon" sizes="60x60" href="/icons/apple-icon-60x60.png">
+<link rel="apple-touch-icon" sizes="72x72" href="/icons/apple-icon-72x72.png">
+<link rel="apple-touch-icon" sizes="76x76" href="/icons/apple-icon-76x76.png">
+<link rel="apple-touch-icon" sizes="114x114" href="/icons/apple-icon-114x114.png">
+<link rel="apple-touch-icon" sizes="120x120" href="/icons/apple-icon-120x120.png">
+<link rel="apple-touch-icon" sizes="144x144" href="/icons/apple-icon-144x144.png">
+<link rel="apple-touch-icon" sizes="152x152" href="/icons/apple-icon-152x152.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-icon-180x180.png">
+<link rel="icon" type="image/png" sizes="192x192"  href="/android-icon-192x192.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="96x96" href="/icons/favicon-96x96.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16x16.png">
+<link rel="manifest" href="/icons/manifest.json">
+<meta name="msapplication-TileColor" content="#ffffff">
+<meta name="msapplication-TileImage" content="/icons/ms-icon-144x144.png">
+<meta name="theme-color" content="#ffffff">
+</head><body>
+<div id="titlebar">
+    <a href="/contribute.html"><img align='left' style="width: 130px; height: 125px; position: relative; left: -6px; top: -6px; border: 0;" src="/images/devme.png" alt="Fork/Hack on Pony Mail"></a>
+    <a href='/'><img src="/images/ponymail.svg" style="width: 110px; margin-left: -10px; margin-right: 20px; height: auto;" align="left"/></a>
+    <h1><a id="title" href="/" style="color: #FFF !important;">Apache Pony Mail&trade; (Incubating)</a></h1>
+    <div id="menubar">
+        <ul>
+            <li><a href="/docs.html"><i class="fa fa-book"></i><span>Documentation</span></a></li>
+            <li><a href="/source.html"><i class="fa fa-git-square"></i><span>Source</span></a></li>
+            <li><a href="/downloads.html"><i class="fa fa-cloud-download"></i><span>Download</span></a></li>
+            <li><a href="/support.html"><i class="fa fa-question-circle"></i><span>Get support</span></a></li>
+            <li><a href="/contribute.html"><i class="fa fa-share-alt"></i><span>Contribute</span></a></li>
+            <li><a href="/about.html"><i class="fa fa-users"></i><span>About</span></a></li>
+        </ul>
+    </div>
+</div>
+<h1 id='ponymailarchiveapi'>Pony Mail Archive API<a href='#ponymailarchiveapi' style='color: rgba(0,0,0,0);'>&para;</a></h1>
+<h3 id='fetchingaspecificemail'>Fetching a specific email:<a href='#fetchingaspecificemail' style='color: rgba(0,0,0,0);'>&para;</a></h3>
+<p>Usage:
+<code>GET /api/email.lua?id=$mid[&amp;attachment=true&amp;file=$hash]</code></p>
+<p>Parameters: (cookie may be required)
+  - $mid: The email ID or Message-ID: header
+  - $hash: the file attachment hash</p>
+<p>Response example:</p>
+<pre>
+{
+    "references": "<git-pr-18-any23@git.apache.org>",
+    "from_raw": "lewismc <git@git.apache.org>",
+    "message-id": "<20150905153416.0CDCFDFE66@git1-us-west.apache.org>",
+    "@import_timestamp": "2015/10/04 09:52:41",
+    "body": "Body of email here...",
+    "request_id": "06b318af97ca96c115e878c14d0814a53407751c31388410421c1751@1441467256@<dev.any23.apache.org>",
+    "@version": 1,
+    "attachments": {},
+    "list": "<dev.any23.apache.org>",
+    "date": "2015/09/05 17:34:16",
+    "from": "lewismc <git@git.apache.org>",
+    "gravatar": "a676c0bf448fcd49f588249ead719b4c",
+    "in-reply-to": "<git-pr-18-any23@git.apache.org>",
+    "epoch": 1441467256,
+    "subject": "[GitHub] any23 pull request: Gsoc 2015 Microformats2",
+    "mid": "06b318af97ca96c115e878c14d0814a53407751c31388410421c1751@1441467256@<dev.any23.apache.org>",
+    "private": false,
+    "tid": "06b318af97ca96c115e878c14d0814a53407751c31388410421c1751@1441467256@<dev.any23.apache.org>",
+    "list_raw": "<dev.any23.apache.org>"
+}
+
+Note: date and epoch are in UTC
+
+</pre>
+
+<h3 id='fetchinglistdata'>Fetching list data<a href='#fetchinglistdata' style='color: rgba(0,0,0,0);'>&para;</a></h3>
+<p>Usage:
+<code>GET /api/stats.lua?list=$list&amp;domain=$domain[&amp;d=$timespan][&amp;q=$query][&amp;header_from=$from][&amp;header_to=$to][&amp;header_subject=$subject][&amp;header_body=$body][&amp;quick][&amp;emailsOnly][&amp;s=$s&amp;e=$e][&amp;since=$since][&amp;dfrom=$dfrom&amp;dto=$dto]</code></p>
+<p>See below for details of <a href="#Timespans">timespan</a> values</p>
+<p>Parameters:</p>
+<pre><code>- $list: The list prefix (e.g. `dev`). Wildcards may be used
+- $domain: The list domain (e.g. `httpd.apache.org`). Wildcards may be used
+- $timespan: A [timespan](#Timespans) value
+- $s: yyyy-mm start of month (day 1)
+- $e: yyyy-mm end of month (last day)
+- $query: A search query (may contain wildcards or negations):
+  - `foo`: Find all documents containing `foo` in headers or body
+  - `-foo`: Find all documents NOT containing `foo`.
+  - `foo*`: Find all documents containing `foo`, `fooa`, `foob` etc
+- $from: Optional From: address
+- $to: Optional To: address
+- $subject: Optional Subject: line
+- $body: Optional body text
+- $dfrom: days ago to start
+- $dto: total days to match
+</code></pre>
+<p>Options:</p>
+<pre><code>- $since: number of seconds since the epoch, defaults to now. 
+   Returns '{"changed":false}' if no emails are later than epoch, otherwise proceeds with normal search
+- quick: send statistics only (exclude participants, threadstruct, word-cloud, emails apart from epoch)
+- emailsOnly: return email summaries only (omit thread_struct, top 10 participants and word-cloud)
+</code></pre>
+<p>Response example:</p>
+<pre>
+{
+    "took": 437179,
+    "firstYear": 2015,
+    "emails": {
+        {
+            "list_raw": "<dev.ponymail.apache.org>",
+            "gravatar": "66cf545ca7a1b8f595282bb9d8a59657",
+            "id": "b1d6446f5cc8f4846454cbabc48ddb08afbb601a77169f8e32e34102@<dev.ponymail.apache.org>",
+            "epoch": 1474883100,
+            "subject": "Re: Missing tag for 0.9 release",
+            "message-id": "<7f249f5e-e422-68a5-d57f-bfce585e638e@apache.org>",
+            "private": false,
+            "irt": "<CAOGo0VYrCOR=820LSDZA=czc==SOwCaRKasaEvVuxtUEXp9SDQ@mail.gmail.com>",
+            "from": "Daniel Gruno <h...@apache.org>",
+            "attachments": 0
+        },...
+    },
+    "no_threads": 10,
+    "domain": "ponymail.info",
+    "participants": {
+        {
+            "count": 3,
+            "name": "Daniel Gruno",
+            "gravatar": "66cf545ca7a1b8f595282bb9d8a59657",
+            "email": "hu...@apache.org"
+        }, ...
+    },
+    "lastYear": 2015,
+    "name": "dev",
+    "cloud": {...},
+    "hits": 25,
+    thread_struct":
+    {
+        "nest": 2,
+        "children": {
+            {
+                "children": {
+                    {
+                        "children": {
+                            {
+                                "children": { },
+                                epoch: ...,
+                                tid: ...,
+                                nest: 1
+                            }
+                        },
+                        epoch: ...,
+                        tid: ...,
+                        nest: 2
+                    }
+                },
+                "epoch": 1474883100,
+                "tid": "b1d6446f5cc8f4846454cbabc48ddb08afbb601a77169f8e32e34102@<dev.ponymail.apache.org>",
+                "nest": 2
+            }
+        },
+        epoch: ...,
+        tid: ...,
+        body: ...
+    },
+    "max": 5000,
+    "searchlist": "<dev.ponymail.info>",
+    "list": "dev@ponymail.info",
+    "numparts": 0,
+    "using_wc": false
+}
+</pre>
+
+<h3 id='anametimespansatimespans'><a name="Timespans"></a>Timespans<a href='#anametimespansatimespans' style='color: rgba(0,0,0,0);'>&para;</a></h3>
+<p>Timespans supported by the &amp;d= parameter.</p>
+<pre><code>- d=yyyy-mm =&gt; equivalent to &amp;s=yyyy-mm&amp;e=yyyy-mm
+- d=lte=n[wMyd] (less than n[wMyd] ago, inclusive)
+- d=gte=n[wMyd] (more than n[wMyd] ago, inclusive)
+- d=.*dfr=yyyy-mm-dd.* (start date for search, inclusive)
+- d=.*dto=yyyy-mm-dd.* (end date for search, inclusive)
+- [wMyd] = weeks, Months, years, days
+- lte and gte are mutually exclusive
+- dfr and dto are normally both present
+</code></pre>
+<h3 id='fetchingpreferencesandquicklistoverview'>Fetching preferences and quick list overview<a href='#fetchingpreferencesandquicklistoverview' style='color: rgba(0,0,0,0);'>&para;</a></h3>
+<p>Usage:
+<code>GET /api/preferences.lua[?logout][?associate=$email][?verify&amp;hash=$hash][?removealt=$email][?save][?addfav=$list][?remfav=$list]</code></p>
+<p>Parameters: (cookie required)
+  - logout: Whether to log out of the system (optional)
+  - associate=$email - associate the account with the $email address
+  - verify&amp;hash=$hash - verify an association request $hash
+  - removealt=$email - remove an alternate $email address
+  - save - save preferences
+  - addfav=$list - add a favourite $list
+  - remfav=$list - remove a favourite $list</p>
+<p>Response example:</p>
+<pre>
+{
+    "lists": {
+        "ponymail.info": {
+            "user": 5,
+            "dev": 36,
+            "commits": 279
+        }
+    },
+    "descriptions": {
+    },
+    "preferences": {
+        "displayMode": "threaded",
+        "hideStats": "no",
+        "theme": "default",
+        "notifications": "direct",
+        "sortOrder": "forward",
+        "compactQuotes": "yes",
+        "fullname": "Daniel Gruno",
+        "groupBy": "thread"
+    },
+    "took": 38487,
+    "login": {
+        "notifications": 0,
+        "credentials": {
+            "fullname": "Daniel Gruno",
+            "email": "foo@bar.tld"
+        }
+    }
+}
+</pre>
+
+<h3 id='fetchingnotificationsforaloggedinuser'>Fetching notifications for a logged in user<a href='#fetchingnotificationsforaloggedinuser' style='color: rgba(0,0,0,0);'>&para;</a></h3>
+<p>Usage:
+<code>GET /api/notifications.lua[?seen=$mid]</code></p>
+<p>Parameters: (cookie required)
+  - $mid: id of the message to be marked as having been seen</p>
+<p>Response example:</p>
+<pre>
+{
+    "notifications": {...}
+}
+or
+{"marked": true}
+</pre>
+
+<h3 id='fetchingamonthsdataasanmboxfile'>Fetching a month's data as an mbox file<a href='#fetchingamonthsdataasanmboxfile' style='color: rgba(0,0,0,0);'>&para;</a></h3>
+<p>Usage:
+<code>GET /api/mbox.lua?list=issues@ponymail.apache.org&amp;date=2016-06</code></p>
+<p>Response example:</p>
+<pre>
+TBA
+</pre>
+
+<h3 id='getatomdataforlistoremail'>Get ATOM data for list or email<a href='#getatomdataforlistoremail' style='color: rgba(0,0,0,0);'>&para;</a></h3>
+<p>Usage:
+<code>GET /api/atom/lua(?list=$lid|?mid=$mid)</code></p>
+<p>Parameters: (cookie may be required)
+  - $lid: the list id, e.g. dev@ponymail.apache.org
+  - $mid: The email ID (Permalink)</p>
+<p>One of the above is required.
+In the case of the list id, data is returned for the last month.
+For email ID, the thread is returned.</p>
+<p>Response example:</p>
+<pre>
+TBA
+</pre>
+<div style="display: inline-block; background: #BBB; margin: -10px; padding: 10px;">
+    <h4><a id="disclaimer"></a>Disclaimer</h4>
+<div style="width: 65%; float: left;">
+<p style="line-height: 12pt;">
+    Apache Pony Mail (Incubating) is an effort undergoing incubation at
+    The Apache Software Foundation (ASF), sponsored by the <a href="https://incubator.apache.org">
+    Apache Incubator</a>. Incubation is required of all newly accepted projects
+    until a further review indicates that the infrastructure,
+    communications, and decision making process have stabilized in a
+    manner consistent with other successful ASF projects. While
+    incubation status is not necessarily a reflection of the
+    completeness or stability of the code, it does indicate that the
+    project has yet to be fully endorsed by the ASF.
+</p>
+</div>
+<div style="width: 20%; float: left; padding-top: 16px; margin-left: -8px;">
+<a href="https://incubator.apache.org"><img src="https://incubator.apache.org/images/incubator_feather_egg_logo_sm.png"/></a>
+</div>
+<div style="width: 15%; float: left; line-height: 15px; padding-left: 22px;">
+    <a class="item" target="_blank" href="https://incubator.apache.org/">Apache Incubator</a><br/>
+            <a class="item" target="_blank" href="https://www.apache.org/">About the ASF<span></span></a><br/>
+            <a class="item" target="_blank" href="https://www.apache.org/foundation/policies/conduct.html">Code of Conduct<span></span></a><br/>
+            <a class="item" target="_blank" href="https://www.apache.org/foundation/thanks.html">Thanks<span></span></a><br/>
+            <a class="item" target="_blank" href="https://www.apache.org/foundation/sponsorship.html">Become a Sponsor<span></span></a><br/>
+            <a class="item" target="_blank" href="https://www.apache.org/security/">Security<span></span></a><br/>
+            <a class="item" target="_blank" href="https://www.apache.org/licenses/LICENSE-2.0">License<span></span></a><br/>
+</div>
+</div>
+</body></html>
